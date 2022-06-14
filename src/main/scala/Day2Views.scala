@@ -4,7 +4,7 @@ object Day2Views {
   def main(args:Array[String]): Unit = {
     println("Creating temporary Views")
 
-    val numbers = (2 to 12).toArray
+    val numbers = (0 to 12).toArray
     println(numbers.mkString(","))
     //our bread and butter is map, filter plus other operations on our collections
     val squares = numbers.map(n => n*n)
@@ -64,7 +64,47 @@ object Day2Views {
     println(numbers.view.filter(n => n % 2 == 0).reduce(add)) //so we can use view if we wanted only certain values
     println(numbers.sum) //should be same result...
 
+
+
     //so reduce is called myCollection.size - 1 times
+
+    //https://alvinalexander.com/scala/fp-book/recursion-great-but-fold-reduce-in-scala/ is more in depth discussion on reduce and fold
+    //turns out reduce is a wrapper for reduceLeft which means reducing start from leftside
+
+    //there should be also reduceRight
+    println(numbers.view.filter(n => n % 2 == 0).reduceRight(add)) //so we can use view if we wanted only certain values
+
+
+    //so fold methods are just like reduce but you enter a starting value
+    //as expected fold is a wrapper for foldLeft
+    println(numbers.view.filter(n => n % 2 == 0).fold(100)(add)) //notice (startingvalue)(reducingFunction)
+
+    println(numbers.view.filter(n => n % 2 == 0).foldRight(100)(add)) //notice (startingvalue)(reducingFunction)
+
+
+    //so we enter a starting value then the function to go through all the numbers
+    val cumulativeSums = numbers.scan(1000)(_+_)
+    println(cumulativeSums.mkString(","))
+
+    //so scan is just like fold(with some starting value) except it keeps all results of accumulation in a sequence,
+    // instead of a single number, so useful for storing values such as cumulative sums
+
+    //Spark library/framework offers built in functionality such as this
+
+    //so product is just multiply everything together
+    println(numbers.product)
+    //so we need to drop first element if it is 0, since product will be meaningless
+    println(numbers.drop(1).product)
+    //so product is same as reduce(_*_)
+    println(numbers.drop(1).reduce(_*_))
+
+    //so alternative to for loop
+    numbers.take(3).foreach(el => println(s"Printing $el"))
+    //below does not work
+    //numbers.take(3).foreach(println(s"Printing $_"))
+
+    //so below does the same thing
+    for (num <- numbers.take(3)) println(s"Printing $num")
 
   }
 
