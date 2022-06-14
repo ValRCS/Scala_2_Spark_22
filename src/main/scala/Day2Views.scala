@@ -19,5 +19,14 @@ object Day2Views {
     //this can be quite wasteful and slow operations down on larger data sets
     //again not a problem with tiny data sets such as this one (pretty much anything under a million items)
 
+    //the idea is to be lazy and use views (some analogy with SQL views) to avoid creating new collections until end
+    //so we add view before we start calculations
+    //and then we cast to whatever structure we need (Array, Vector, List etc) at the end
+
+    val oddCubes = numbers.view.map(n => n*n*n).filter(n => n%2 == 1).slice(0,5).takeRight(3).toArray
+    //so we took first 5 results and took 3 of the right ones from those 5
+    // a bit silly example to show different ways of getting data
+    println(oddCubes.mkString(","))
+
   }
 }
