@@ -4,7 +4,7 @@ object Day2Views {
   def main(args:Array[String]): Unit = {
     println("Creating temporary Views")
 
-    val numbers = (0 to 12).toArray
+    val numbers = (2 to 12).toArray
     println(numbers.mkString(","))
     //our bread and butter is map, filter plus other operations on our collections
     val squares = numbers.map(n => n*n)
@@ -28,5 +28,45 @@ object Day2Views {
     // a bit silly example to show different ways of getting data
     println(oddCubes.mkString(","))
 
+    //queries
+    val firstOver10 = numbers.find(n => n > 10) //find first occurence matching our function predicate
+    println(firstOver10.getOrElse(-1)) //-1 here is Else if we find nothing, we could use something else instead of -1
+    val firstOver20 = numbers.find(n => n > 20)
+    println(firstOver20.getOrElse(-1)) //-1 here is Else if we find nothing
+
+    //so we use getOrElse since find gets us Option(Some) maybe we got nothing
+
+    val result = numbers.find(n => n < 0).getOrElse(-1) //in this example -1 is a bit misleading
+    //we might actually have -1 as an answer
+    println(result)
+    println(numbers.contains(3))
+
+    //so combinations will give us iterator of all combinations from our collection of given size
+//    val myCombinations = evenSquares.combinations(2).toArray //so we have a 2D array
+    //we cast to Array or some other structure at the end no need to cast numbers immediately
+    val myCombinations = (1 to 5).combinations(2).toArray //so we have a 2D array
+    for (combination <- myCombinations) {
+      println(combination.mkString(","))
+    }
+
+    //now we get to the last of the 3 big functional methods - reduce
+    //we've seen map and filter and those are pretty intuitive
+
+    def add(accumulator: Int, currentVal: Int): Int = {
+      val theSum = accumulator + currentVal
+      println(s"received $accumulator and $currentVal, their sum is $theSum")
+      theSum
+    }
+
+    //so with reduce we will have an accumulater where we store intermediate results
+    println(numbers.reduce(add))
+    println("only even number sum")
+    println(numbers.view.filter(n => n % 2 == 0).reduce(add)) //so we can use view if we wanted only certain values
+    println(numbers.sum) //should be same result...
+
+    //so reduce is called myCollection.size - 1 times
+
   }
+
+  //good news for you is that reduce is needed much less than map and filter
 }
