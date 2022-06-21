@@ -16,6 +16,41 @@ object Day5GroupByExercise extends App {
   //Print simple statistics on how many Veggies start with each letter of the alphabet (if there is some letter missing that is fine)
   //there are multiple approaches
   //you can convert your map to sortedMap if you want - one of the ways to do it
+  val veggieGroup: Map[Char, Array[String]] = Veggies.items.groupBy(_.charAt(0))
+  //so nice way of getting statistics for each letter
+  println(veggieGroup.view.mapValues(x => x.size).mkString(", "))
+  for ((key, value) <- veggieGroup) {
+    println(s"Letter $key - > ${value.toList.sorted}")
+  }
 
+
+  val alphabetVeggies = Veggies.items.groupBy(_(0))
+  val sortedAlphabetVeggies = alphabetVeggies.toSeq.sortBy(_._1)
+  //by going to sequence
+  //so we go from Map to Sequence, sorting by first element of tuple which happens to be character
+
+  for ((key, value) <- sortedAlphabetVeggies) {
+    if (value.toList.size > 1) {
+      println(s"There are ${value.toList.size} vegetables that start with $key:\n${value.mkString(", ")}\n---")
+    } else {
+      println(s"There is ${value.toList.size} vegetable that starts with $key:\n${value.mkString(", ")}\n---")
+    }
+  }
   //bonus print each letter and then the Veggies under that letter in a sorted order
+
+  val groupedVeggies = Veggies.items.groupBy(_.head)
+
+  //https://stackoverflow.com/questions/3074118/how-do-i-convert-a-mapint-any-to-a-sortedmap-in-scala-or-a-treemap
+  val sortedVeggieMap = groupedVeggies.to(collection.immutable.SortedMap) //so should be sorted by key - which is char here
+  for ((key, value) <- sortedVeggieMap) {
+    println(s"Letter $key - > ${value.length} veggie(s) ${value.toList.sorted}")
+  }
+
+  val storedFruits = Array("apple", "orange", "banana", "apple", "pear", "apple", "pear")
+  val exactGrouping = storedFruits.groupBy(_.toString)
+  for ((key, value) <- exactGrouping) println(s"Key - $key -> ${value.toList}")
+  //so this will be a faster way of obtaining counts for each unit
+  val fruitCounts = exactGrouping.map(kv => (kv._1, kv._2.length))
+  println(fruitCounts)
+
 }
