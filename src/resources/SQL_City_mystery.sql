@@ -140,7 +140,75 @@ AND address_street_name = 'Franklin Ave');
 --. She has red hair and she drives a Tesla Model S. 
 -- I know that she attended the SQL Symphony Concert 3 times in December 2017.
 
+SELECT * FROM drivers_license dl
+WHERE car_make LIKE 'Tesla%'
+AND car_model = 'Model S'
+AND hair_color = 'red'
+AND gender = 'female';
 
+SELECT fec.person_id, COUNT(*) attendance From facebook_event_checkin fec
+WHERE event_name LIKE 'SQL Symphony Concert'
+AND date LIKE '201712%'
+GROUP BY fec.person_id
+ORDER BY COUNT(fec.person_id) DESC;
+
+
+SELECT fec.person_id, fec.date, p.name,
+COUNT(*) attendance FROM facebook_event_checkin fec
+JOIN person p 
+ON fec.person_id = p.id 
+WHERE event_name LIKE 'SQL Symphony Concert'
+AND date LIKE '201712%'
+GROUP BY fec.person_id
+ORDER BY COUNT(fec.person_id) DESC;
+
+SELECT * FROM person p
+JOIN drivers_license dl 
+ON p.license_id = dl.id
+WHERE car_make LIKE 'Tesla%'
+AND car_model LIKE 'Model S'
+AND hair_color LIKE 'red'
+AND gender LIKE 'female';
+
+SELECT * FROM person p
+JOIN facebook_event_checkin fec 
+ON p.id = fec.person_id
+JOIN drivers_license dl 
+ON p.license_id = dl.id 
+WHERE fec.event_name LIKE '%Symphony%'
+AND dl.hair_color = 'red'
+AND height BETWEEN 65 AND 67
+AND dl.car_model LIKE '%Model%S%'
+AND dl.car_make = 'Tesla'
+AND date LIKE '201712%'
+GROUP BY fec.person_id
+HAVING COUNT(*)=3;
+
+SELECT * FROM person p
+JOIN facebook_event_checkin fec 
+ON p.id = fec.person_id
+JOIN drivers_license dl 
+ON p.license_id = dl.id 
+WHERE fec.event_name LIKE '%Symphony%'
+AND dl.hair_color = 'red'
+AND height BETWEEN 65 AND 67
+AND dl.car_model LIKE '%Model%S%'
+AND dl.car_make = 'Tesla'
+AND date LIKE '201712%';
+
+
+SELECT * FROM person p
+JOIN drivers_license dl 
+ON p.license_id = dl.id 
+JOIN facebook_event_checkin fec 
+ON p.id = fec.person_id
+WHERE fec.event_name LIKE 'SQL Symphony Concert'
+AND dl.hair_color = 'red'
+AND height BETWEEN 65 AND 67
+AND dl.car_model LIKE 'Model S'
+AND dl.car_make = 'Tesla'
+AND date LIKE '201712%'
+GROUP BY fec.person_id;
 
 
 
