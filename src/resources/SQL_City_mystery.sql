@@ -210,9 +210,55 @@ AND dl.car_make = 'Tesla'
 AND date LIKE '201712%'
 GROUP BY fec.person_id;
 
+SELECT * FROM facebook_event_checkin fec ;
+
+SELECT COUNT(*) FROM facebook_event_checkin fec ;
+
+SELECT fec.person_id, 
+COUNT(event_id) events,
+SUM(date) silly_all_dates,
+SUM(date)/COUNT(event_id) my_avg, --no need with AVG of course
+AVG(date) avg_date,
+MIN(date) first_date,
+MAX(date) last_date
+FROM facebook_event_checkin fec 
+GROUP BY fec.person_id 
+--so HAVING has to be right after GROUP BY
+HAVING events = 3 -- so like WHERE but AFTER grouping is done
+ORDER BY events ASC;
+
+SELECT strftime('%Y %m %d %H %M %S %s','now');
+
+--it might be helpful to create new views for more complex queries
+CREATE VIEW v_facebook
+AS
+SELECT *, (date%10000)/100 month_day FROM facebook_event_checkin fec ;
+
+SELECT * FROM v_facebook;
+
+--so when we group by something
+--for COUNT aggregation any other column will do
+
+SELECT month_day, COUNT(person_id) events FROM v_facebook vf 
+GROUP BY month_day
+ORDER BY events DESC;
+
+--SO now we see that April was the busiest month for events
 
 
+SELECT * FROM person p ;
 
+SELECT * FROM drivers_license dl ;
+
+SELECT car_make, 
+COUNT(id) car_cnt,
+AVG(age) age,
+AVG(height) height,
+MIN(height),
+MAX(height)
+FROM drivers_license dl
+GROUP BY car_make
+ORDER BY age ASC;
 
 
  
