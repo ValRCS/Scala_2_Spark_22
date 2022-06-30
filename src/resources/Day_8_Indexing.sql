@@ -176,6 +176,19 @@ SELECT InvoiceLineId ,
 FROM invoice_items ii 
 WHERE UnitPrice * Quantity > 9000;
 
+--TODO 1
+-- create index for milliseconds on tracks table
+-- can it use unique constraint?
+-- query all tracks over 5 min length
+-- check if the query uses index
+
+--TODO 2
+-- create index on combined LENGTH of customers first_name and last_name
+-- two possible approaches one with concat one without
+-- find all customers with combined length over 20 symbols
+-- check if the query uses index
+
+
 
 
 
