@@ -181,12 +181,133 @@ WHERE UnitPrice * Quantity > 9000;
 -- can it use unique constraint?
 -- query all tracks over 5 min length
 -- check if the query uses index
+CREATE INDEX idx_millisec_tracks
+ON tracks(milliseconds);
+
+SELECT Milliseconds, COUNT(TrackId ) trackCount FROM tracks t 
+GROUP BY Milliseconds
+ORDER BY trackCount DESC;
+
+---- first task 
+SELECT * FROM tracks
+WHERE (Milliseconds/1000)/60 > 5;
+
+EXPLAIN QUERY PLAN
+SELECT * FROM tracks
+WHERE (Milliseconds/1000)/60 > 5;
+--so above does not benefit from regular index because
+-- we are doing calculations
+
+SELECT 1000*60*5; -- so just a calculator
+
+EXPLAIN QUERY PLAN
+SELECT * FROM tracks
+WHERE Milliseconds > 300000;
+--so by moving the constant value to the right
+--we gain the ability to use the plain index
+
+SELECT * FROM tracks
+WHERE Milliseconds > 300000;
+
+
+
+
 
 --TODO 2
 -- create index on combined LENGTH of customers first_name and last_name
 -- two possible approaches one with concat one without
--- find all customers with combined length over 20 symbols
+-- find all customers with combined name length over 20 symbols
 -- check if the query uses index
+
+CREATE INDEX idx_first_last_name
+ON customers(LENGTH(FirstName) + LENGTH(LastName));
+
+SELECT * FROM customers c
+WHERE (LENGTH(FirstName) + LENGTH(LastName)) >= 20;
+
+EXPLAIN QUERY PLAN
+SELECT * FROM customers c2
+WHERE (LENGTH(FirstName) + LENGTH(LastName)) >= 20;
+
+DROP INDEX IF EXISTS --if exists is optional
+idx_first_last_name;
+
+--alternative approach use || for CONCAT
+SELECT FirstName, LastName,    
+LENGTH (FirstName || LastName) NameLength
+FROM customers c 
+--ORDER BY LENGTH (FirstName || LastName) DESC;
+ORDER BY NameLength DESC;
+
+EXPLAIN QUERY PLAN
+SELECT * FROM customers c 
+WHERE LENGTH(FirstName || LastName) > 20;
+
+DROP INDEX IF EXISTS --if exists is optional
+idx_cust_len;
+
+CREATE INDEX idx_customer_name_length
+ON customers(LENGTH(FirstName || LastName));
+
+EXPLAIN QUERY PLAN
+SELECT FirstName, LastName,    
+LENGTH (FirstName || LastName) NameLength
+FROM customers c 
+--ORDER BY LENGTH (FirstName || LastName) DESC;
+ORDER BY NameLength DESC;
+
+EXPLAIN QUERY PLAN
+SELECT FirstName, LastName,    
+LENGTH (FirstName || LastName) NameLength
+FROM customers c 
+ORDER BY LENGTH (FirstName || LastName) DESC;
+
+-- other SQL based database will have similar syntax
+--to see all indexes
+SELECT
+	type,
+	name,
+	tbl_name, 
+	sql
+FROM
+	sqlite_master
+WHERE
+	type='index';
+
+--https://www.sqlitetutorial.net/sqlite-vacuum/
+--cleanup after dropping tables
+--might change primary key rowid values
+
+
+SELECT 
+    name
+FROM 
+    sqlite_master
+WHERE 
+    type ='table' AND 
+    name NOT LIKE 'sqlite_%';
+
+DROP TABLE accounts; -- goodbye accounts
+DROP TABLE account_changes ; 
+DROP TABLE contacts;
+
+--let's check auto vacuum settings
+PRAGMA auto_vacuum;
+
+-- see all the different settings
+PRAGMA pragma_list;
+
+PRAGMA user_version;
+
+VACUUM;
+
+-- I can also set up auto vacuum
+PRAGMA auto_vacuum = FULL;
+PRAGMA auto_vacuum = 1;
+
+--we can query other settings
+PRAGMA cache_size;
+
 
 
 
