@@ -296,3 +296,34 @@ ORDER BY i.CustomerId ;
 
 SELECT * FROM customers c2 
 WHERE c2.CustomerId BETWEEN 30 AND 40;
+
+SELECT ii.TrackId, t.name, i.CustomerId, c.FirstName, c.LastName, c.Email, c.Phone, g.Name AS genreName
+FROM invoice_items ii  
+JOIN invoices i 
+	ON ii.InvoiceId = i.InvoiceId
+JOIN customers c 
+	ON i.CustomerId = c.CustomerId
+JOIN tracks t 
+	ON ii.TrackId = t.TrackId
+JOIN genres g 
+	ON t.GenreId = g.GenreId
+WHERE c.CustomerId = 33;
+
+CREATE VIEW IF NOT EXISTS v_track_purchases
+AS
+SELECT ii.TrackId, t.name, i.CustomerId, c.FirstName, c.LastName, c.Email, c.Phone, g.Name AS genreName
+FROM invoice_items ii  
+JOIN invoices i 
+	ON ii.InvoiceId = i.InvoiceId
+JOIN customers c 
+	ON i.CustomerId = c.CustomerId
+JOIN tracks t 
+	ON ii.TrackId = t.TrackId
+JOIN genres g 
+	ON t.GenreId = g.GenreId;
+
+SELECT * FROM v_track_purchases vtp;
+
+SELECT DISTINCT(CustomerId), FirstName , LastName FROM v_track_purchases vtp
+WHERE genreName = 'Classical'
+GROUP BY CustomerId ;
