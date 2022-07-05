@@ -56,4 +56,12 @@ object Day11RedisIntermediate extends App {
   val hackers = r.zrange("hackers", 0, -1).getOrElse(List[String]())
   println(hackers.mkString(","))
 
+  //TODO 3 more hackers with their scores/birthyear ( you can use your own or use the ones from redis.io example
+  //TODO get all hackers born after 1960 -
+ //use zrangebyscore method
+
+  //TODO create a new hash key with at least 5 fields with corresponding values
+  //TODO retrieve 3 of those values - you can use hget
+  // alternative would be r.hmget
+
 }
