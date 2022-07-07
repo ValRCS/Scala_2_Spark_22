@@ -12,3 +12,6 @@ lazy val root = (project in file("."))
 //NOTE: Log4J dependency is not fixed in this version
 // https://mvnrepository.com/artifact/net.debasishg/redisclient
 libraryDependencies += "net.debasishg" %% "redisclient" % "3.42"
+
+// https://mvnrepository.com/artifact/org.mongodb.scala/mongo-scala-driver
+libraryDependencies += "org.mongodb.scala" %% "mongo-scala-driver" % "4.6.1"
