@@ -114,6 +114,5 @@ object Day11RedisIntermediate extends App {
   //streams - data is arriving non-stop it is not finished
   //https://redis.io/docs/manual/data-types/streams/
 
-  val streamId = r.
 
 }
