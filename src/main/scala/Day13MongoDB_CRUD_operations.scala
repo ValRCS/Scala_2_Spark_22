@@ -1,7 +1,7 @@
 package com.github.ValRCS
 
 import org.mongodb.scala.model.Filters //we use this for lt, which we use Filters.lt for
-import org.mongodb.scala.model.Filters.{and, equal, gte}
+import org.mongodb.scala.model.Filters.{and, equal, gte, or}
 import org.mongodb.scala.{Document, MongoClient, MongoDatabase}
 
 import java.lang.Thread.sleep
@@ -36,6 +36,8 @@ object Day13MongoDB_CRUD_operations extends App {
 //  val allRestaurants = collection.find(equal("borough","Staten Island"))
 //  val allRestaurants = collection.find(and(gte("stars", 2), Filters.lt("stars", 5), equal("categories", "Bakery")))
 //    val allRestaurants = collection.find(gte("address.building", "3000")) //greather lexicographically
+////    val allRestaurants = collection.find(Filters.regex("name", ".*Kosher.*"))
+  //TODO find ALL restaurants in Manhattan offering barbeque OR BBQ  in name (maybe try cuisine as well)
     val allRestaurants = collection.find(Filters.regex("name", ".*Kosher.*"))
     .subscribe(
       (doc: Document) => {
