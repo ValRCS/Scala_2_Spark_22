@@ -12,12 +12,12 @@ import scala.collection.mutable.ArrayBuffer
 
 object CassandraExample {
 
-  def getSession(host: String, port: Int, username: String, password: String, caPath: String): Session = {
+  def getClusterSession(host: String, port: Int, username: String, password: String, caPath: String): (Cluster,Session) = {
     println(s"Going to connect to $host")
     val sslOptions = loadCaCert(caPath)
     //    var cluster = null
     val cluster = Cluster.builder.addContactPoint(host).withPort(port).withSSL(sslOptions).withAuthProvider(new PlainTextAuthProvider(username, password)).build
-    cluster.connect //not throwing exception
+    (cluster, cluster.connect) //not throwing exception
   }
 
   def runQuery(session: Session, keyspace: String, query: String):ResultSet = {
