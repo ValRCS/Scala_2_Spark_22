@@ -15,3 +15,11 @@ libraryDependencies += "net.debasishg" %% "redisclient" % "3.42"
 
 // https://mvnrepository.com/artifact/org.mongodb.scala/mongo-scala-driver
 libraryDependencies += "org.mongodb.scala" %% "mongo-scala-driver" % "4.6.1"
+
+//// https://mvnrepository.com/artifact/com.datastax.oss/java-driver-core
+//libraryDependencies += "com.datastax.oss" % "java-driver-core" % "4.14.1"
+
+// https://mvnrepository.com/artifact/com.datastax.cassandra/cassandra-driver-core
+libraryDependencies += "com.datastax.cassandra" % "cassandra-driver-core" % "3.11.2"
+
+
