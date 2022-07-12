@@ -11,6 +11,20 @@ import java.security.cert.X509Certificate
 import scala.collection.mutable.ArrayBuffer
 
 object CassandraExample {
+
+  def getSession(host: String, port: Int, username: String, password: String, caPath: String): Session = {
+    println(s"Going to connect to $host")
+    val sslOptions = loadCaCert(caPath)
+    //    var cluster = null
+    val cluster = Cluster.builder.addContactPoint(host).withPort(port).withSSL(sslOptions).withAuthProvider(new PlainTextAuthProvider(username, password)).build
+    cluster.connect //not throwing exception
+  }
+
+  def runQuery(session: Session, keyspace: String, query: String):ResultSet = {
+    session.execute(s"USE $keyspace") //use this database //no validity is provided here
+    session.execute(query) //so for non SELECTS nothing will be returned
+  }
+
   @throws[Exception]
   def cassandraExample(host: String, port: Int, username: String, password: String, caPath: String): Unit = {
     println(s"Going to connect to $host")
@@ -20,10 +34,13 @@ object CassandraExample {
     try {
       //      cluster: Cluster = Cluster.builder.addContactPoint(host).withPort(port).withSSL(sslOptions).withAuthProvider(new PlainTextAuthProvider(username, password)).build
       val session = cluster.connect
+      //first we create a new keyspace if it does not exist //so similar to creating a database
       session.execute("CREATE KEYSPACE IF NOT EXISTS example_keyspace WITH REPLICATION = {'class': 'NetworkTopologyStrategy', 'aiven': 3}")
-      session.execute("USE example_keyspace")
+      session.execute("USE example_keyspace") //use this database
+      //now we create a new table if we do not have it
       session.execute("CREATE TABLE IF NOT EXISTS example_java (id int PRIMARY KEY, message text)")
       //similar to prepared statements in SQL we bind values
+      //so to protect against CQL injection we bind the values
       session.execute("INSERT INTO example_java (id, message) VALUES (?, ?)", 123, "Hello from Java-Scala!")
       session.execute("INSERT INTO example_java (id, message) VALUES (?, ?)", 90, "Hello from Valdis")
       val rs = session.execute("SELECT id, message FROM example_java")
@@ -39,6 +56,7 @@ object CassandraExample {
       //      }
     } finally if (cluster != null) cluster.close()
   }
+
   @throws[Exception]
   def setResults(host: String, port: Int, username: String, password: String, caPath: String, keyspace:String, id:Int, message:String): Unit = {
     println(s"Going to connect to $host")
@@ -69,7 +87,8 @@ object CassandraExample {
       session.execute(s"USE $keyspace") //FIXME worry about CQL injection attacks
       val rs = session.execute(query) //TODO think accepting arbitrary string safety
       rs.forEach(row => arrayBuf += String.format("Row: id = %d, message = %s", row.getInt("id"), row.getString("message")))
-    }finally if (cluster != null) cluster.close()
+
+    }finally if (cluster != null) cluster.close() //closes session AND cluster (some extra options)
     arrayBuf.toSeq
   }
 
