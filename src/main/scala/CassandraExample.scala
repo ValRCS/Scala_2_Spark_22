@@ -25,6 +25,10 @@ object CassandraExample {
     session.execute(query) //so for non SELECTS nothing will be returned
   }
 
+  def rawQuery(session: Session, query: String):ResultSet = {
+    session.execute(query) //will return ResultSet if SELECT
+  }
+
   @throws[Exception]
   def cassandraExample(host: String, port: Int, username: String, password: String, caPath: String): Unit = {
     println(s"Going to connect to $host")
