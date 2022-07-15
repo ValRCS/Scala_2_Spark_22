@@ -22,4 +22,8 @@ libraryDependencies += "org.mongodb.scala" %% "mongo-scala-driver" % "4.6.1"
 // https://mvnrepository.com/artifact/com.datastax.cassandra/cassandra-driver-core
 libraryDependencies += "com.datastax.cassandra" % "cassandra-driver-core" % "3.11.2"
 
+// https://mvnrepository.com/artifact/org.neo4j.driver/neo4j-java-driver
+libraryDependencies += "org.neo4j.driver" % "neo4j-java-driver" % "4.4.9"
+
+
 
